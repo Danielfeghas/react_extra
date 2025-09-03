@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { productContext } from "../contexts/ProductContext";
 
 // const products = [
 //     { id: 1, name: "Laptop", price: 999.99, category: "Electronics" },
@@ -14,43 +15,47 @@ import { useState, useEffect } from "react";
 // ];
   
 const MyProducts = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const [userToken, setUserToken] = useState("Peter")
-    const [products, setProducts] = useState([])
-    const [loading, setLoading] = useState(false)
+    // const [isLoggedIn, setIsLoggedIn] = useState(false)
+    // const [userToken, setUserToken] = useState("Peter")
+    // const [products, setProducts] = useState([])
+    // const [loading, setLoading] = useState(false)
+    const{fetchProducts, isLoading, products} = useContext(productContext)
 
-
-    useEffect(() => {
-        // action
+    useEffect(()=>{
         fetchProducts()
-    }, [isLoggedIn, userToken]) // dependencies array
+    },[])
+
+    // useEffect(() => {
+    //     // action
+    //     fetchProducts()
+    // }, [isLoggedIn, userToken]) // dependencies array
 
 
     // ACTION
-    const fetchProducts = async () => {
-        setLoading(true)
-        try {
-            const res = await fetch("https://fakestoreapi.com/products")
-            const data = await res.json()
-            setProducts(data)
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
-    }
+    // const fetchProducts = async () => {
+    //     setLoading(true)
+    //     try {
+    //         const res = await fetch("https://fakestoreapi.com/products")
+    //         const data = await res.json()
+    //         setProducts(data)
+    //     } catch (error) {
+    //         console.log(error)
+    //     } finally {
+    //         setLoading(false)
+    //     }
+    // }
 
-    const toggleAuthState = () => {
-        // setIsLoggedIn(prev => !prev)
-        setUserToken(prev => prev + "hssh")
-    }
+        // const toggleAuthState = () => {
+        //     // setIsLoggedIn(prev => !prev)
+        //     setUserToken(prev => prev + "hssh")
+        // }
 
     return (
         <div>
             <h2>My Products</h2>
-            <div >
+            <div className="product-container" >
                 {
-                    loading ? (
+                    isLoading ? (
                         <h1>Loading...</h1>
                     ) : (
                         <>
@@ -61,12 +66,14 @@ const MyProducts = () => {
                                     <>
                                         {
                                             products?.map((product, index)=>(
-                                                <div key={index}>
+                                                
+                                                <a href={`/MyProducts/${product.id}`} key={index} className="product">
                                                     <img src={product.image} alt="" width={200} />
                                                     <h2>{product.title}</h2>
                                                     <p>{product.category}</p>
-                                                    <p>${product.price}</p>
-                                                </div>
+                                                    <p>{product.price}</p>
+                                                </a>
+                                                
                                             ))
                                         }
                                     </>
